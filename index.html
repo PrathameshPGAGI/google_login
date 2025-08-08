@@ -60,35 +60,29 @@
             const params = new URLSearchParams(window.location.search);
             const code = params.get('code');
             console.log(code);
-    
-            if (code) {
-                // Send code to backend to get user info (POST recommended, but your backend uses GET)
-                const response = await fetch(`${BACKEND_URL}/linkedin/callback?code=${code}`);
-                if (response.ok) {
-                    const user = await response.json();
-                    showUser(
-                        user.first_name || user.name || '',
-                        user.email || '',
-                        user.picture || ''
-                    );
-                } else {
-                    alert('LinkedIn login failed');
-                }
-                // Remove code from URL for cleaner UX
-                window.history.replaceState({}, document.title, window.location.pathname);
-                return;
-            }
+            // if (code) {
+            //     // Send code to backend to get user info
+            //     const response = await fetch(`${BACKEND_URL}/google/callback?code=${code}`);
+            //     if (response.ok) {
+            //         const user = await response.json();
+            //         showUser(user.first_name, user.email, user.picture); // Adjust fields as needed
+            //         window.history.replaceState({}, '', window.location.pathname);
+            //     } else {
+            //         alert('Google login failed');
+            //     }
+            //     return;
+            // }
         };
         
         async function login() {
             try {
-                // Get LinkedIn login URL from backend
-                const response = await fetch(`${BACKEND_URL}/linkedin_login`);
+                // Get login URL from backend
+                const response = await fetch(`${BACKEND_URL}/google_login`);
                 const data = await response.json();
-    
+
                 console.log('Login response:', data);
                 
-                // Redirect to LinkedIn OAuth
+                // Redirect to Google OAuth
                 window.location.href = data.url;
             } catch (error) {
                 alert('Login failed: ' + error.message);
