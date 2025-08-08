@@ -61,18 +61,18 @@
             const code = params.get('code');
             console.log(code);
 
-            // if (code) {
-            //     // Send code to backend to get user info
-            //     const response = await fetch(`${BACKEND_URL}/google/callback?code=${code}`);
-            //     if (response.ok) {
-            //         const user = await response.json();
-            //         console.log(user); // Adjust fields as needed
-            //     } else {
-            //         const error = await response.json();
-            //         alert('Google login failed: ' + (error.detail || 'Unknown error'));
-            //     }
-            //     return;
-            // }
+            if (code) {
+                // Send code to backend to get user info
+                const response = await fetch(`${BACKEND_URL}/google/callback?code=${code}`);
+                if (response.ok) {
+                    const user = await response.json();
+                    console.log(user); // Adjust fields as needed
+                } else {
+                    const error = await response.json();
+                    alert('Google login failed: ' + (error.detail || 'Unknown error'));
+                }
+                return;
+            }
 
         };
         
