@@ -64,7 +64,7 @@
                 const response = await fetch(`${BACKEND_URL}/google/callback?code=${code}`);
                 if (response.ok) {
                     const user = await response.json();
-                    showUser(user.first_name, user.email, user.picture); // Adjust fields as needed
+                    console.log(user); // Adjust fields as needed
                     window.history.replaceState({}, '', window.location.pathname);
                 } else {
                     alert('Google login failed');
