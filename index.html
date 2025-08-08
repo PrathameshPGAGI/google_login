@@ -76,8 +76,6 @@
                 // Get login URL from backend
                 const response = await fetch(`${BACKEND_URL}/google_login`);
                 const data = await response.json();
-
-                console.log('Login response:', data);
                 
                 // Redirect to Google OAuth
                 window.location.href = data.url;
