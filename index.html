@@ -68,7 +68,8 @@
                     const user = await response.json();
                     console.log(user); // Adjust fields as needed
                 } else {
-                    alert('Google login failed');
+                    const error = await response.json();
+                    alert('Google login failed: ' + (error.detail || 'Unknown error'));
                 }
                 return;
             }
