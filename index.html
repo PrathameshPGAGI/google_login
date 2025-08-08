@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Google OAuth</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .user-info {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 10px;
+        }
+        button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #357ae8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Google OAuth Demo</h1>
+    
+    <div id="login-section">
+        <button onclick="login()">Login with Google</button>
+    </div>
+    
+    <div id="user-section" style="display: none;">
+        <div class="user-info">
+            <img id="user-pic" class="profile-pic" src="" alt="Profile">
+            <h2 id="user-name"></h2>
+            <p id="user-email"></p>
+        </div>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://ai-for-university-recommendation-232251258466.europe-west1.run.app';
+        
+        // Check if we got user data from OAuth callback
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            const name = params.get('name');
+            const email = params.get('email');
+            const picture = params.get('picture');
+
+            console.log('OAuth callback params:', { name, email, picture });
+            
+            if (name && email) {
+                showUser(name, email, picture);
+                // Clean URL
+                window.history.replaceState({}, '', window.location.pathname);
+            }
+        };
+        
+        async function login() {
+            try {
+                // Get login URL from backend
+                const response = await fetch(`${BACKEND_URL}/google_login`);
+                const data = await response.json();
+
+                console.log('Login response:', data);
+                
+                // Redirect to Google OAuth
+                window.location.href = data.url;
+            } catch (error) {
+                alert('Login failed: ' + error.message);
+            }
+        }
+        
+        function showUser(name, email, picture) {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('user-section').style.display = 'block';
+            
+            document.getElementById('user-name').textContent = name;
+            document.getElementById('user-email').textContent = email;
+            document.getElementById('user-pic').src = picture || '';
+        }
+        
+        function logout() {
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('user-section').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
