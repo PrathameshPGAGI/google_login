@@ -55,6 +55,65 @@
     <script>
         const BACKEND_URL = 'https://ai-for-university-recommendation-232251258466.europe-west1.run.app';
         
+        // Check if we got user data from LinkedIn OAuth callback
+        window.onload = async function() {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get('code');
+            console.log(code);
+    
+            if (code) {
+                // Send code to backend to get user info (POST recommended, but your backend uses GET)
+                const response = await fetch(`${BACKEND_URL}/linkedin/callback?code=${code}`);
+                if (response.ok) {
+                    const user = await response.json();
+                    showUser(
+                        user.first_name || user.name || '',
+                        user.email || '',
+                        user.picture || ''
+                    );
+                } else {
+                    alert('LinkedIn login failed');
+                }
+                // Remove code from URL for cleaner UX
+                window.history.replaceState({}, document.title, window.location.pathname);
+                return;
+            }
+        };
+        
+        async function login() {
+            try {
+                // Get LinkedIn login URL from backend
+                const response = await fetch(`${BACKEND_URL}/linkedin_login`);
+                const data = await response.json();
+    
+                console.log('Login response:', data);
+                
+                // Redirect to LinkedIn OAuth
+                window.location.href = data.url;
+            } catch (error) {
+                alert('Login failed: ' + error.message);
+            }
+        }
+        
+        function showUser(name, email, picture) {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('user-section').style.display = 'block';
+            
+            document.getElementById('user-name').textContent = name;
+            document.getElementById('user-email').textContent = email;
+            document.getElementById('user-pic').src = picture || '';
+        }
+        
+        function logout() {
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('user-section').style.display = 'none';
+        }
+    </script>
+
+    
+<!--     <script>
+        const BACKEND_URL = 'https://ai-for-university-recommendation-232251258466.europe-west1.run.app';
+        
         // Check if we got user data from OAuth callback
          window.onload = async function() {
             const params = new URLSearchParams(window.location.search);
@@ -102,6 +161,6 @@
             document.getElementById('login-section').style.display = 'block';
             document.getElementById('user-section').style.display = 'none';
         }
-    </script>
+    </script> -->
 </body>
 </html>
