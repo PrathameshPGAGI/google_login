@@ -56,13 +56,22 @@
         const BACKEND_URL = 'https://ai-for-university-recommendation-232251258466.europe-west1.run.app';
         
         // Check if we got user data from OAuth callback
-        window.onload = function() {
+        window.onload = async function() {
             const params = new URLSearchParams(window.location.search);
-            const name = params.get('name');
-            const email = params.get('email');
-            const bearer_token = params.get('bearer_token');
-
-            console.log('OAuth callback params:', { name, email, bearer_token });
+            const code = params.get('code');
+            if (code) {
+                // Send code to backend to get user info
+                const response = await fetch(`${BACKEND_URL}/google/callback?code=${code}`);
+                if (response.ok) {
+                    const user = await response.json();
+                    showUser(user.first_name, user.email, user.picture); // Adjust fields as needed
+                    window.history.replaceState({}, '', window.location.pathname);
+                } else {
+                    alert('Google login failed');
+                }
+                return;
+            }
+            // ...existing code for normal login...
         };
         
         async function login() {
